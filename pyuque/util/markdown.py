@@ -1,7 +1,7 @@
 '''
 Utilities for generating markdown documents.
 '''
-
+import re
 
 def get_markdown_table(data, cols=None):
     generate_line = lambda l: '| %s |' % (' | '.join(l))
@@ -17,3 +17,18 @@ def get_markdown_table(data, cols=None):
             line = [line.get(k, '') for k in cols]
         ret.append(generate_line(line))
     return '\n'.join(ret)
+
+
+code_pattern = re.compile(r'```(.*?)\n(.*?)\n```', re.S)
+
+def parse_code_block(body_markdown):
+    '''
+    Parse code block from markdown.
+    '''
+    code_block_list = []
+    for language, code in code_pattern.findall(body_markdown):
+        code_block_list.append({
+            "language": language,
+            "code": code
+        })
+    return code_block_list
