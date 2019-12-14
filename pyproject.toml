@@ -1,0 +1,12 @@
+[tool.poetry]
+name = "pyuque"
+version = "0.1.0"
+authors = []
+description = ""
+homepage = "https://github.com/socrateslee/pyuque"
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.5"
+requests = "^2.22.0"
+bs4 = "^0.0.1"
