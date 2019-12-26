@@ -13,6 +13,23 @@ import requests
 OAUTH_BASE = "https://www.yuque.com/oauth2"
 CODE_ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
+SCOPE_SHORTCUTS = {
+    "all" : [
+        "group",
+        "repo",
+        "topic",
+        "doc",
+        "artboard"
+    ],
+    "all:read": [
+        "group:read",
+        "repo:read",
+        "topic:read",
+        "doc:read",
+        "artboard:read"
+    ]
+}
+
 
 def gen_code():
     '''Generate length 40 client code for non web mode.
@@ -27,7 +44,7 @@ def get_signature(client_id, code, response_type, scope, timestamp, client_secre
                        msg=('&'.join(["client_id=%s" % client_id,
                                       "code=%s" % code,
                                       "response_type=%s" % response_type,
-                                      "scope=%s" % scope,
+                                      "scope=%s" % urllib.parse.quote(scope),
                                       "timestamp=%s" % timestamp])).encode('utf-8'),
                        digestmod=hashlib.sha1).digest()
     return base64.b64encode(digest).decode('utf-8')
@@ -50,6 +67,8 @@ def authorize(client_id, scope="", redirect_uri="", state="", code="", client_se
         str: Authorization url.
     '''
     response_type = 'code'
+    if scope in SCOPE_SHORTCUTS:
+        scope = ','.join(SCOPE_SHORTCUTS[scope])
     if isinstance(scope, (list, tuple)):
         scope = ','.join(scope)
     params = {
