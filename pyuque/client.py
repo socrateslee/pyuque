@@ -177,6 +177,10 @@ class Yuque(object):
     def doc_delete(self, namespace_or_id, doc_id):
         return self.send_request('DELETE', '/repos/%s/docs/%s' % (namespace_or_id.strip('/'), doc_id))
 
-    def search_repos(self, q, type=""):
+    def search_search(self, q, type="", offset=None, related=None):
         params = {"q": q, "type": type}
-        return self.send_request('GET', '/search/repos', params=params)
+        if offset:
+            params["offset"] = offset
+        if related in ['true', True]:
+            params["related"] = "true"
+        return self.send_request('GET', '/search', params=params)
