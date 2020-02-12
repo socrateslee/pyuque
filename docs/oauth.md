@@ -50,7 +50,7 @@ __authorize(client_id, scope="", redirect_uri="", state="", code="", client_secr
 - mode: OAuth授权的方式，web应用方式为"web"，非web应用方式为"non-web"，默认为非web应用方式。
 - client_id: 第三方应用的client_id。
 - scope: 授权的权限范围，详见[语雀的相关文档](https://www.yuque.com/yuque/developer/understanding-scopes-for-oauth-apps)，pyuque提供了两个额外的权限的shortcut，即"all"和"all:read"，分别代表除了"attach_upload"之外的全部权限和全部只读权限。
-- redirect_uri: 只在web应用方式下需要，为用户在语雀网站授权后的跳转地址，必须和语雀后台申请OAuth应用的域名一致。
+- redirect_uri: 只在web应用方式下需要，为用户在语雀网站授权后的跳转地址，必须和语雀后台申请OAuth应用的域名一致。为了调试方便，在语雀后台把这个域名配置为```http://127.0.0.1```，并且以同样的地址作为redirect_uri参数，也是没有问题的。
 - state: 只在web应用方式下需要，为跳转地址可以携带的第三方应用的自定义参数。
 - code: 只在非web应用方式下需要，是用户提供的client code，可以使用pyuque.oauth.gen_code()函数生成
 - client_secret: 只在非web应用方式下需要，用于计算签名
