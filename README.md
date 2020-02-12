@@ -2,6 +2,8 @@
 
 pyuque一个[蚂蚁金服的语雀](https://www.yuque.com/)的Python版本的API Client，并且提供了一些命令行工具来辅助进行授权、组织和管理语雀上的文档。
 
+pyuque的文档也是通过pyuque更新到语雀上的，具体见[https://www.yuque.com/socrateslee/pyuque](https://www.yuque.com/socrateslee/pyuque).
+
 ## 安装
 
 通过pip安装和升级pyuque
