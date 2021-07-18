@@ -8,6 +8,7 @@ import configparser
 from .config import get_access_token_from_config,\
                     get_credentials_from_config
 from .oauth import gen_code, authorize, get_access_token
+from .client import Yuque
 
 
 def parse_args(parser):
@@ -64,6 +65,17 @@ def main():
     elif options and options[0] == 'test':
         access_token = get_access_token_from_config(args)
         print(access_token)
+    elif options and options[0] == 'get-code':
+        access_token = get_access_token_from_config(args)
+        client = Yuque(token=access_token)
+        from .toolkit import extract
+        index = int(options[2])\
+                if len(options) > 2 and options[2].isdigit()\
+                else 0
+        print(extract.get_code_block(fullpath=options[1],
+                                     index=index,
+                                     client=client))
+
     else:
         parser.print_help()
 
