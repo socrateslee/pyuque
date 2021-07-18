@@ -2,14 +2,21 @@
 '''
 The command line client for pyuque.
 '''
+import os
 import argparse
+import configparser
+from .config import get_access_token_from_config,\
+                    get_credentials_from_config
 from .oauth import gen_code, authorize, get_access_token
+
 
 def parse_args(parser):
     parser.add_argument("--client_id", default="",
                         help="The OAuth application client id.")
-    parser.add_argument("--client_secret", default="",
-                        help="The OAuth application client secret.")
+    parser.add_argument("--access_token", default="",
+                        help="The access token.")
+    parser.add_argument("--profile", default="",
+                        help="The name of the config profile.")
     parser.add_argument("--scope", default="",
                         help="The authorization scope.")
     parser.add_argument("--redirect_uri", default="",
@@ -49,9 +56,14 @@ def main():
     args = vars(parse_args(parser))
     options = args['options']
     if options and options[0] == 'oauth-web':
+        client_id, client_secret = get_credentials_from_config(args)
         oauth_process_web(args['client_id'], args['client_secret'], args['scope'], args['redirect_uri'])
     elif options and options[0] == 'oauth-nonweb':
+        client_id, client_secret = get_credentials_from_config(args)
         oauth_process_nonweb(args['client_id'], args['client_secret'], args['scope'])
+    elif options and options[0] == 'test':
+        access_token = get_access_token_from_config(args)
+        print(access_token)
     else:
         parser.print_help()
 

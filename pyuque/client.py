@@ -1,4 +1,5 @@
 import requests
+from .config import get_access_token_from_config
 
 DEFAULT_API_BASE = "https://www.yuque.com/api/v2"
 
@@ -21,8 +22,9 @@ class MethodGetter(object):
 
 
 class Yuque(object):
-    def __init__(self, token, api_base=None):
-        self.token = token
+    def __init__(self, token=None, api_base=None):
+        self.token = token if token\
+                     else get_access_token_from_config({})
         self.api_base = api_base or DEFAULT_API_BASE
         self.user = MethodGetter(self, 'user')
         self.group = MethodGetter(self, 'group')
