@@ -1,12 +1,16 @@
 [tool.poetry]
 name = "pyuque"
 version = "0.1.1"
-authors = []
-description = "A Python client for yuque."
+authors = ["lichun"]
+description = "A Python client/toolkit for yuque."
 homepage = "https://github.com/socrateslee/pyuque"
 license = "MIT"
+
+[tool.poetry.scripts]
+pyuque = 'pyuque.cli:main'
 
 [tool.poetry.dependencies]
 python = "^3.5"
 requests = "^2.22.0"
 bs4 = "^0.0.1"
+
