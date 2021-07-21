@@ -1,3 +1,5 @@
+import io
+import csv
 import bs4
 
 
@@ -24,3 +26,11 @@ def table_to_dict(table, cols):
     for row in table:
         ret.append({k: v for k, v in zip(cols, row)})
     return ret
+
+
+def table_to_csv(table):
+    fd = io.StringIO()
+    writer = csv.writer(fd)
+    for row in table:
+        writer.writerow(row)
+    return fd.getvalue()
