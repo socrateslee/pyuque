@@ -8,7 +8,4 @@ pyuque的主要的功能涵盖(有一部分尚在实现中)：
 - 为语雀的API调用提供一些简单的命令行工具(cli)
 - 一些辅助功能，便于基于语雀完成一些简单的自动化任务
 
-pyuque的github地址为[https://gitub.com/socrateslee/pyuque](gitub.com/socrateslee/pyuque)。
-
-
-
+pyuque的github地址为[https://github.com/socrateslee/pyuque](https://github.com/socrateslee/pyuque)。
