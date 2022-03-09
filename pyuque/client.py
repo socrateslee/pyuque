@@ -164,12 +164,13 @@ class Yuque(object):
                                  '/repos/%s/docs' % namespace_or_id.strip('/'),
                                  json=params)
 
-    def doc_update(self, namespace_or_id, doc_id, title=None, slug=None, public=None, body=None):
+    def doc_update(self, namespace_or_id, doc_id, title=None, slug=None, public=None, body=None, _force_asl=None):
         params = {
             "title": title,
             "slug": slug,
             "public": public,
-            "body": body
+            "body": body,
+            "_force_asl": _force_asl
         }
         params = _filter_none(params)
         return self.send_request('PUT',
