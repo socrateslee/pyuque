@@ -47,7 +47,7 @@ def get_signature(client_id, code, response_type, scope, timestamp, client_secre
                                       "scope=%s" % urllib.parse.quote(scope),
                                       "timestamp=%s" % timestamp])).encode('utf-8'),
                        digestmod=hashlib.sha1).digest()
-    return base64.b64encode(digest).decode('utf-8')
+    return base64.urlsafe_b64encode(digest).decode('utf-8')
 
 
 def authorize(client_id, scope="", redirect_uri="", state="", code="", client_secret='', mode=""):

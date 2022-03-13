@@ -1,6 +1,7 @@
 '''
 Toolkit for extracting content from yuque docs.
 '''
+import argparse
 from ..util import markdown, html, names
 
 
@@ -26,3 +27,16 @@ def get_table(fullpath=None, index=0, client=None):
         if table_list and index < len(table_list):
             return html.table_to_csv(table_list[index])
     return ''
+
+
+def handle_cli(action, cli_args, **kwargs):
+    parser = argparse.ArgumentParser(prog=action)
+    parser.add_argument('fullpath')
+    parser.add_argument('index', default=0, type=int)
+    args = vars(parser.parse_args(cli_args))
+    if action == 'get-code':
+        print(get_code_block(args['fullpath'], index=args['index'], client=kwargs['client']))
+    elif action == 'get-table':
+        print(get_table(args['fullpath'], index=args['index'], client=kwargs['client']))
+    else:
+        parser.print_help()

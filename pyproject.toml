@@ -13,4 +13,4 @@ pyuque = 'pyuque.cli:main'
 python = "^3.5"
 requests = "^2.22.0"
 bs4 = "^0.0.1"
-
+Markdown = "^3.2.2"
