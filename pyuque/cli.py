@@ -86,20 +86,19 @@ def main():
     parser = argparse.ArgumentParser(add_help=False)
     args, rest = parse_args(parser)
     args = vars(args)
-    print(args, rest)
     command = args['command']
     token_info = None
     action = ''
     if command == 'oauth-web':
         client_id, client_secret = get_credentials_from_config(args)
-        token_info = oauth_process_web(args['client_id'], args['client_secret'], args['scope'], args['redirect_uri'])
+        token_info = oauth_process_web(client_id, client_secret, args['scope'], args['redirect_uri'])
     elif command == 'oauth-nonweb':
         client_id, client_secret = get_credentials_from_config(args)
-        token_info = oauth_process_nonweb(args['client_id'], args['client_secret'], args['scope'])
+        token_info = oauth_process_nonweb(client_id, client_secret, args['scope'])
     elif command in TOOLKIT_MAP:
         action = command
     if not action and rest and rest[0] in TOOLKIT_MAP:
-        action = command
+        action = rest[0]
         rest = rest[1:]
 
     # tooklit actions
