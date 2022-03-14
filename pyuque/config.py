@@ -51,7 +51,7 @@ get_config = GetConfig()
 def get_credentials_from_config(args):
     client_id = ''
     client_secret = ''
-    if args.get('client_id') in args.get('client_secret'):
+    if args.get('client_id') and args.get('client_secret'):
         client_id = args['client_id']
         client_secret = args['client_secret']
     else:
