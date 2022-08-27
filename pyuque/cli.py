@@ -9,6 +9,7 @@ import argparse
 import configparser
 from .config import get_access_token_from_config,\
                     get_credentials_from_config
+from .util.names import get_space_domain
 from .oauth import gen_code, authorize, get_access_token
 from .client import Yuque
 
@@ -50,34 +51,39 @@ def parse_args(parser):
                         help="The authorization scope.")
     parser.add_argument("--redirect_uri", default="",
                         help="The redirect_uri for oauth web process.")
+    parser.add_argument("--space", default="",
+                        help="The name or url of the yuque space.")
     parser.add_argument("command", default='', nargs="?")
     return parser.parse_known_args()
 
 
-def oauth_process_web(client_id, client_secret, scope, redirect_uri):
+def oauth_process_web(client_id, client_secret, scope, redirect_uri, prefix=None):
     url = authorize(client_id,
                     scope=scope,
                     state="pyuque",
                     redirect_uri=redirect_uri,
-                    mode="web")
+                    mode="web",
+                    prefix=prefix)
     print("Please copy and access the url in your browser:\n%s\n" % url)
     code = input("Please input the code in your redirected url:")
     ret = get_access_token(client_id, code,
                            client_secret=client_secret,
-                           grant_type='authorization_code')
+                           grant_type='authorization_code',
+                           prefix=prefix)
     print(ret)
     return ret
 
 
-def oauth_process_nonweb(client_id, client_secret, scope):
+def oauth_process_nonweb(client_id, client_secret, scope, prefix=None):
     code = gen_code()
     url = authorize(client_id,
                     scope=scope,
                     code=code,
-                    client_secret=client_secret)
+                    client_secret=client_secret,
+                    prefix=prefix)
     print("Please copy and access the url in your browser:\n%s\n" % url)
     input("Press ENTER after you authorized to continue...")
-    ret = get_access_token(client_id, code, grant_type='client_code')
+    ret = get_access_token(client_id, code, grant_type='client_code', prefix=prefix)
     print(ret)
     return ret
 
@@ -87,14 +93,15 @@ def main():
     args, rest = parse_args(parser)
     args = vars(args)
     command = args['command']
+    domain_prefix = get_space_domain(args['space']) if args['space'] else None
     token_info = None
     action = ''
     if command == 'oauth-web':
         client_id, client_secret = get_credentials_from_config(args)
-        token_info = oauth_process_web(client_id, client_secret, args['scope'], args['redirect_uri'])
+        token_info = oauth_process_web(client_id, client_secret, args['scope'], args['redirect_uri'], prefix=domain_prefix)
     elif command == 'oauth-nonweb':
         client_id, client_secret = get_credentials_from_config(args)
-        token_info = oauth_process_nonweb(client_id, client_secret, args['scope'])
+        token_info = oauth_process_nonweb(client_id, client_secret, args['scope'], prefix=domain_prefix)
     elif command in TOOLKIT_MAP:
         action = command
     if not action and rest and rest[0] in TOOLKIT_MAP:
@@ -107,7 +114,7 @@ def main():
         access_token = token_info.get('access_token')\
                 if token_info and token_info.get('access_token')\
                 else get_access_token_from_config(args)
-        client = Yuque(token=access_token)
+        client = Yuque(token=access_token, prefix=domain_prefix)
         module_action.handle_cli(action, rest, client=client)
     elif '-h' in rest or '--help' in rest:
         parser.print_help()

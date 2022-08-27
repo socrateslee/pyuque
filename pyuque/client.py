@@ -4,6 +4,10 @@ from .config import get_access_token_from_config
 DEFAULT_API_BASE = "https://www.yuque.com/api/v2"
 
 
+def get_api_base(prefix):
+    return '%s/api/v2' % prefix
+
+
 def _filter_none(d):
     return {k: v for k, v in d.items() if v is not None}
 
@@ -22,10 +26,15 @@ class MethodGetter(object):
 
 
 class Yuque(object):
-    def __init__(self, token=None, api_base=None):
+    def __init__(self, token=None, api_base=None, prefix=None):
         self.token = token if token\
                      else get_access_token_from_config({})
-        self.api_base = api_base or DEFAULT_API_BASE
+        if api_base:
+            self.api_base = api_base
+        elif prefix:
+            self.api_base = get_api_base(prefix)
+        else:
+            self.api_base = DEFAULT_API_BASE
         self.user = MethodGetter(self, 'user')
         self.group = MethodGetter(self, 'group')
         self.repo = MethodGetter(self, 'repo')

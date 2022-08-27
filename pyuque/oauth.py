@@ -31,8 +31,13 @@ SCOPE_SHORTCUTS = {
 }
 
 
+def get_oauth_base(prefix):
+    return '%s/oauth2' % prefix
+
+
 def gen_code():
-    '''Generate length 40 client code for non web mode.
+    '''
+    Generate length 40 client code for non web mode.
     '''
     code = ''.join([random.choice(CODE_ALPHABET)\
                     for i in range(40)])
@@ -50,7 +55,7 @@ def get_signature(client_id, code, response_type, scope, timestamp, client_secre
     return base64.b64encode(digest).decode('utf-8')
 
 
-def authorize(client_id, scope="", redirect_uri="", state="", code="", client_secret='', mode=""):
+def authorize(client_id, scope="", redirect_uri="", state="", code="", client_secret='', mode="", prefix=None):
     '''
     生成用户授权访问的url
 
@@ -67,6 +72,7 @@ def authorize(client_id, scope="", redirect_uri="", state="", code="", client_se
         str: Authorization url.
     '''
     response_type = 'code'
+    oauth_base = get_oauth_base(prefix) if prefix else OAUTH_BASE
     if scope in SCOPE_SHORTCUTS:
         scope = ','.join(SCOPE_SHORTCUTS[scope])
     if isinstance(scope, (list, tuple)):
@@ -85,12 +91,13 @@ def authorize(client_id, scope="", redirect_uri="", state="", code="", client_se
         params.update({"code": code,
                        "timestamp": timestamp,
                        "sign": sign})
-    return "%s/authorize?%s" % (OAUTH_BASE, urllib.parse.urlencode(params))
+    return "%s/authorize?%s" % (oauth_base, urllib.parse.urlencode(params))
 
 
-def get_access_token(client_id, code, client_secret='', grant_type=''):
+def get_access_token(client_id, code, client_secret='', grant_type='', prefix=None):
     '''通过授权码获取access token
     '''
+    oauth_base = get_oauth_base(prefix) if prefix else OAUTH_BASE
     params = {
         "client_id": client_id,
         "code": code,
@@ -103,6 +110,6 @@ def get_access_token(client_id, code, client_secret='', grant_type=''):
     else:
         raise Exception("Unknown grant_type %s." % grant_type)
     headers = {'User-Agent': 'pyuque'}
-    resp = requests.post("%s/token" % OAUTH_BASE,
+    resp = requests.post("%s/token" % oauth_base,
                          json=params, headers=headers, timeout=60)
     return resp.json()
